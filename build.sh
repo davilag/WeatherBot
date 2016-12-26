@@ -5,6 +5,6 @@ hash pip 2>/dev/null || { echo >&2 "I require pip but it's not installed.  Abort
 
 echo "Installing all dependencies..."
 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 echo "All denpendencies installed!"
