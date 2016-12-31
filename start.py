@@ -1,8 +1,6 @@
 from WeatherConsumer.WeatherConsumer import WeatherConsumer
 from WeatherConsumer.ResponseConstructor import WeatherResponseConstructor
-import telepot
-import time
-import os
+import telepot, time, os
 
 print('Starting bot')
 

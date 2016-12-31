@@ -1,6 +1,4 @@
-import requests
-import os
-import json
+import requests, os, json
 
 class WeatherConsumer:
 
