@@ -4,7 +4,14 @@ import telepot, time, os
 
 #Method to handle all the messages from the clients.
 def handle (msg):
-    content_type, chat_type, chat_id = telepot.glance(msg)
+
+    print(msg)
+    try:
+        content_type, chat_type, chat_id = telepot.glance(msg)
+    except:
+        #TODO: need to add some logging in order to detect which messages are failing.
+        e = sys.exc_info()[0]
+        print( "Error: %s" % e )
 
     if content_type == 'text':
         bot.sendMessage(chat_id, msg['text'])
