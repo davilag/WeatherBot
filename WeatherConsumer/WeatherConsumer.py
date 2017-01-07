@@ -12,7 +12,7 @@ class WeatherConsumer:
 
     # Gets the forecas for the next week given a latitude and longitude.
     def getForecastByLatLon (self, lat, lon):
-        requestURL = self._apiUrl + self._apiToken + '/' + str(lat) + ',' + str(lon)
+        requestURL = self._apiUrl + self._apiToken + '/' + lat + ',' + lon
         return self._makeForecastRequest(requestURL)
 
     # Makes the request to the weather API adding parameters for the units and

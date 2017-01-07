@@ -1,11 +1,14 @@
+import datetime
+
 class WeatherResponseConstructor:
 
-    def buildActualWeatherResponse (self, weatherApiResponse):
+    def buildActualWeatherResponse (self, weatherApiResponse, messageTimestamp):
         out = 'The weather in your location is:\n'
 
-        #The response returns always the day before as the first value in the
-        #daily forecast.
-        todaysForecast = weatherApiResponse['daily']['data'][1]
+        todaysForecast = self._getForecastByDate(weatherApiResponse['daily']['data'], messageTimestamp)
+
+        if not todaysForecast:
+            return 'No forecast found!'
 
         actualWeather = weatherApiResponse['currently']
         out += todaysForecast['summary'] + '\n'
@@ -14,3 +17,19 @@ class WeatherResponseConstructor:
         out += 'Actual temperature: ' + str(int(round(actualWeather['temperature']))) + 'ºC'
 
         return out
+
+    #Gets the forecast given the message date and checking if the
+    def _getForecastByDate(self, dailyResponse, messageTimestamp):
+        messageDate = datetime.datetime.fromtimestamp(messageTimestamp)
+        print(messageDate)
+
+        for forecast in dailyResponse:
+            forecastDate = datetime.datetime.fromtimestamp(forecast['time'])
+
+            if (forecastDate.day == messageDate.day and
+                forecastDate.month == messageDate.month and
+                forecastDate.year == messageDate.year):
+
+                return forecast
+
+        return None
