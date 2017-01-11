@@ -10,3 +10,6 @@ requests
 
 ##Build the project
 In order to add all the project dependencies, we have to run the `build.sh` script. We may need to run it with `sudo` permissions.
+
+##Style guide
+Python style guide: https://google.github.io/styleguide/pyguide.html
