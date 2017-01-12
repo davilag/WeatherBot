@@ -11,9 +11,7 @@ def handle (msg):
         e = sys.exc_info()[0]
         print( "Error: %s" % e )
 
-    if content_type == 'text':
-        bot.sendMessage(chat_id, msg['text'])
-    elif content_type == 'location':
+    if content_type == 'location':
 
         location = _get_message_location(msg)
         weatherInfo = weather_consumer.get_forecast_by_lat_lon(location['lat'], location['lon'])
