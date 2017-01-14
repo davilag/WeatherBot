@@ -1,9 +1,16 @@
+from .weather_consumer import WeatherConsumer
 import datetime
 
-class WeatherResponseConstructor:
+class WeatherService:
 
-    def build_actual_weather_response (self, weather_api_response, message_timestamp):
+    __weather_consumer = WeatherConsumer()
 
+    def build_today_forecast_response (self, msg):
+
+        location = self.__get_message_location(msg)
+        weather_api_response = self.__weather_consumer.get_forecast_by_lat_lon(location['lat'], location['lon'])
+
+        message_timestamp = msg['date']
         todays_forecast = self.__get_forecast_by_date(weather_api_response['daily']['data'], message_timestamp)
 
         if not todays_forecast:
@@ -34,3 +41,7 @@ class WeatherResponseConstructor:
                 return forecast
 
         return None
+
+    def __get_message_location(self, msg):
+        location = msg['location']
+        return {'lat': str(location['latitude']), 'lon': str(location['longitude'])}

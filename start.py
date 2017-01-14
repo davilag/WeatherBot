@@ -1,5 +1,4 @@
-from weather_consumer.weather_consumer import WeatherConsumer
-from weather_consumer.response_constructor import WeatherResponseConstructor
+from weather_consumer.weather_service import WeatherService
 import telepot, time, os
 
 #Method to handle all the messages from the clients.
@@ -12,21 +11,12 @@ def handle (msg):
         print( "Error: %s" % e )
 
     if content_type == 'location':
-
-        location = _get_message_location(msg)
-        weatherInfo = weather_consumer.get_forecast_by_lat_lon(location['lat'], location['lon'])
-
-        response = response_constructor.build_actual_weather_response(weatherInfo, msg['date'])
+        response = weather_service.build_today_forecast_response(msg)
         bot.sendMessage(chat_id, response)
-
-def _get_message_location(msg):
-    location = msg['location']
-    return {'lat': str(location['latitude']), 'lon': str(location['longitude'])}
 
 print('Starting bot')
 
-weather_consumer = WeatherConsumer()
-response_constructor = WeatherResponseConstructor()
+weather_service = WeatherService()
 bot = telepot.Bot(os.getenv('TELEGRAM_API_TOKEN', ''))
 
 bot.message_loop(handle)
