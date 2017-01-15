@@ -2,11 +2,10 @@ import requests, os, json
 
 class WeatherConsumer:
 
-    __api_url = os.getenv('WEATHER_API_URL', '')
-    __api_token = os.getenv('WEATHER_API_TOKEN', '')
-
     # Constructor
     def __init__ (self):
+        self.__api_url = os.getenv('WEATHER_API_URL', '')
+        self.__api_token = os.getenv('WEATHER_API_TOKEN', '')
         if not self.__api_url or not self.__api_url:
             raise Exception('Could not initialize WeatherConsumer.')
 

@@ -1,9 +1,10 @@
-from .weather_consumer import WeatherConsumer
 import datetime
+from .weather_consumer import WeatherConsumer
 
 class WeatherService:
 
-    __weather_consumer = WeatherConsumer()
+    def __init__(self):
+        self.__weather_consumer = WeatherConsumer()
 
     def build_today_forecast_response (self, msg):
 

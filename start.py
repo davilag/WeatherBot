@@ -1,25 +1,13 @@
-from weather_consumer.weather_service import WeatherService
 import telepot, time, os
+from telepot.delegate import per_chat_id, create_open, pave_event_space
+from message_consumer.message_consumer import MessageConsumer
 
-#Method to handle all the messages from the clients.
-def handle (msg):
-    try:
-        content_type, chat_type, chat_id = telepot.glance(msg)
-    except:
-        #TODO(davilag): need to add some logging in order to detect which messages are failing.
-        e = sys.exc_info()[0]
-        print( "Error: %s" % e )
+TOKEN = os.getenv('TELEGRAM_API_TOKEN', '')
 
-    if content_type == 'location':
-        response = weather_service.build_today_forecast_response(msg)
-        bot.sendMessage(chat_id, response)
+bot = telepot.DelegatorBot(TOKEN, [
+    pave_event_space()(
+        per_chat_id(), create_open, MessageConsumer, timeout=60
+    ),
+])
 
-print('Starting bot')
-
-weather_service = WeatherService()
-bot = telepot.Bot(os.getenv('TELEGRAM_API_TOKEN', ''))
-
-bot.message_loop(handle)
-
-while 1:
-    time.sleep(10)
+bot.message_loop(run_forever='Listening ...')
