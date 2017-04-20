@@ -1,7 +1,3 @@
-dependencies:
-  pre:
-    - pip install requirements.txt
-
 test:
   pre:
     - py.test
