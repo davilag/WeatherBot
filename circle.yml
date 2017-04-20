@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - pip3 install requirements.txt
+
+test:
+  pre:
+    - py.test
