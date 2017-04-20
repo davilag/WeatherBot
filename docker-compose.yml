@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+  weather-bot:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      WEATHER_API_TOKEN:
+      TELEGRAM_API_TOKEN:
+      WEATHER_API_URL: 
