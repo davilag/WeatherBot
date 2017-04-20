@@ -1,6 +1,6 @@
 dependencies:
   pre:
-    - pip3 install requirements.txt
+    - pip install requirements.txt
 
 test:
   pre:
