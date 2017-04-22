@@ -3,6 +3,8 @@ machine:
     - docker
 
 dependencies:
+  pre:
+    - sudo apt-get update; sudo apt-get install ssh-pass
   override:
     - docker info
     - docker build --rm=false -t davilag/weatherbot .
@@ -17,3 +19,4 @@ deployment:
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push davilag/weatherbot
+      - sshpass -p $SSHPASS ssh $SSHUSER@$SSHMACHINE './run.sh'
