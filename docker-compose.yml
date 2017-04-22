@@ -1,13 +1,21 @@
 version: '2'
-
 services:
-
   weather-bot:
     build:
       context: ./
       dockerfile: ./Dockerfile
-    restart: always
     environment:
       WEATHER_API_TOKEN:
       TELEGRAM_API_TOKEN:
-      WEATHER_API_URL: 
+      WEATHER_API_URL:
+    links:
+      - portainer
+    restart: always
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "12345:9000"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
