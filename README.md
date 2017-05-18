@@ -1,4 +1,6 @@
 # WeatherBot
+[![CircleCI](https://circleci.com/gh/davilag/WeatherBot/tree/master.svg?style=svg)](https://circleci.com/gh/davilag/WeatherBot/tree/master)
+
 Telegram bot to notify notify users every morning the weather in a location (potentially their current location)
 
 ##Add dependencies
