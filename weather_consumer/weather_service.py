@@ -13,7 +13,6 @@ class WeatherService:
 
         message_timestamp = msg['date']
         todays_forecast = self.__get_forecast_by_date(weather_api_response['daily']['data'], message_timestamp)[0]
-
         if not todays_forecast:
             return 'No forecast found!'
 
@@ -54,11 +53,10 @@ class WeatherService:
     def __get_forecast_by_date(self, daily_response, message_timestamp):
 
         out = []
-        message_date = datetime.datetime.fromtimestamp(message_timestamp)
+        message_date = message_timestamp
 
         for forecast in daily_response:
             forecast_date = datetime.datetime.fromtimestamp(forecast['time'])
-
             if (forecast_date.day == message_date.day and
                 forecast_date.month == message_date.month and
                 forecast_date.year == message_date.year):

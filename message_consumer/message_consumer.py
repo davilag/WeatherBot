@@ -1,51 +1,46 @@
-import telepot
 from weather_consumer.weather_service import WeatherService
+from telegram import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove)
+from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
+                          ConversationHandler)
 
-class MessageConsumer(telepot.helper.ChatHandler):
-
+class MessageConsumer:
     def __init__(self, *args, **kwargs):
-        super(MessageConsumer, self).__init__(*args, **kwargs)
         self._weather_service = WeatherService()
-        self._actions = {'/rain': self._send_rain_forecast}
-        self._command = None
-        self._arguments = None
 
-    def on_chat_message(self, msg):
-        try:
-            content_type, chat_type, chat_id = telepot.glance(msg)
-        except:
-            #TODO(davilag): need to add some logging in order to detect which messages are failing.
-            e = sys.exc_info()[0]
-            print( "Error: %s" % e )
+    def get_rain_handler(self):
+        flow = self.RainForecastFlow()
+        return flow.conv_handler
 
-        if content_type == 'location':
-            if not self._command:
-                response = self._weather_service.build_today_forecast_response(msg)
-            else:
-                response = self._actions[self._command](msg)
-            self.sender.sendMessage(response)
-        elif content_type == 'text':
-            print('I get a text')
-            self._command, self._arguments = self._get_command_arguments(msg['text'])
-            if self._command and self._actions[self._command]:
-                self.sender.sendMessage('Now send your location')
+    def today_forecast(self, msg):
+        return self._weather_service.build_today_forecast_response(msg)
 
-    def _get_command_arguments(self, msg):
-        msg = msg.strip()
-        if msg.startswith('/'):
-            ms = msg.split(' ')
-            return ms[0], ms[1::]
-        return None, None
+    class RainForecastFlow:
 
-    def _send_rain_forecast(self, msg):
-        self._command = None
-        self._arguments = None
+        def __init__(self):
+            self._weather_service = WeatherService()
+            self._LOCATION = range(1)
+            self.conv_handler = ConversationHandler(
+                entry_points=[CommandHandler('rain', self._start)],
 
-        date = None
-        if not self._arguments:
-            date = msg['date']
+                states={
+                    self._LOCATION: [MessageHandler(Filters.location, self._location)]
+                },
 
-        if date :
-            return self._weather_service.build_rain_forecast_response(msg)
-        else:
-            return 'Didnt get that bit'
+                fallbacks=[CommandHandler('cancel', self._cancel)]
+            )
+
+        def _start(self, bot, update):
+            location_keyboard = KeyboardButton(text='Send location', request_location=True)
+            custom_keyboard = [[ location_keyboard ]]
+            reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+            update.message.reply_text('Would you mind sharing your location with me?',
+                                reply_markup=reply_markup)
+            return self._LOCATION
+
+        def _location(self, bot, update):
+            update.message.reply_text(self._weather_service.build_rain_forecast_response(update['message']),
+                                        reply_markup=ReplyKeyboardRemove())
+            return ConversationHandler.END
+
+        def _cancel(self, bot, update):
+            return ConversationHandler.END

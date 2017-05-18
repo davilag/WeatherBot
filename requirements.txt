@@ -1,3 +1,4 @@
 telepot
 requests
 pytest
+python-telegram-bot
