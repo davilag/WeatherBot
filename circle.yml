@@ -5,6 +5,7 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install sshpass
+    - pip install -U pytest
   override:
     - docker info
     - docker build --rm=false -t davilag/weatherbot .
